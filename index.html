@@ -1,0 +1,357 @@
+<title>Long Human Story</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: history as strata. A thin colour-coded core sample (one colour per era) runs through every section: the era strip, the timeline dots, the explorer tabs and the quiz. */
+:root{
+  --bg:#edf0f1; --surface:#f8f9f9; --fg:#15222b; --muted:#53636d; --line:#cdd5d9; --accent:#1c5f7a; --accent-fg:#ffffff;
+  --good:#1f7a4d; --bad:#b3372f;
+  --e1:#9a6b4f; --e2:#c08a2e; --e3:#4f7f6a; --e4:#5b6fa8; --e5:#8f4f7a; --e6:#c0562f; --e7:#2f7f9a;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f181e; --surface:#16222a; --fg:#e6ecef; --muted:#9aabb5; --line:#2b3b45; --accent:#6bc0de; --accent-fg:#08141a;
+  --good:#5fd39a; --bad:#ff8d84;
+  --e1:#c39274; --e2:#e0b04f; --e3:#79b69d; --e4:#8ea0dc; --e5:#c682ae; --e6:#e88459; --e7:#5fb6d3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f181e; --surface:#16222a; --fg:#e6ecef; --muted:#9aabb5; --line:#2b3b45; --accent:#6bc0de; --accent-fg:#08141a;
+  --good:#5fd39a; --bad:#ff8d84;
+  --e1:#c39274; --e2:#e0b04f; --e3:#79b69d; --e4:#8ea0dc; --e5:#c682ae; --e6:#e88459; --e7:#5fb6d3; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.08;margin:0}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+.label{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section{padding-block:56px}
+.sec-head{display:grid;gap:10px;margin-bottom:28px;max-width:62ch}
+.sec-head p{color:var(--muted)}
+
+/* hero */
+header{padding-top:40px;padding-bottom:24px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.theme-btn{font-family:var(--mono);font-size:.78rem;background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.theme-btn:hover{border-color:var(--accent)}
+.lede{max-width:56ch;font-size:1.2rem;margin-top:20px;color:var(--muted)}
+.scale{margin-top:40px;display:grid;gap:10px}
+.scale-bar{position:relative;height:30px;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.scale-fill{position:absolute;top:0;bottom:0;left:0;right:0;background:repeating-linear-gradient(90deg,var(--line) 0 2px,transparent 2px 14px)}
+.scale-written{position:absolute;top:0;bottom:0;right:0;width:1.7%;min-width:5px;background:var(--accent)}
+.scale-ends{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.scale-note{max-width:62ch;color:var(--muted);font-size:1rem}
+
+/* era strip (nav) */
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:36px}
+.strip a{display:block;text-decoration:none;color:var(--fg);border-top:8px solid var(--c);padding:8px 6px 0;font-family:var(--mono);font-size:.7rem;line-height:1.3}
+.strip a:hover{background:var(--surface)}
+@media (max-width:640px){.strip{grid-template-columns:repeat(4,1fr);row-gap:12px}}
+
+/* timeline */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.chip{font-family:var(--mono);font-size:.76rem;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--c,var(--fg));display:inline-block}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:112px;top:0;bottom:0;width:2px;background:var(--line)}
+.ev{display:grid;grid-template-columns:100px 26px minmax(0,1fr);column-gap:12px;padding-bottom:26px;position:relative}
+.ev .yr{font-family:var(--mono);font-size:.9rem;font-weight:500;text-align:right;padding-top:2px}
+.ev .dot{width:14px;height:14px;border-radius:50%;background:var(--c);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--c);margin:6px 0 0 6px;position:relative;z-index:1}
+.ev h3{margin-bottom:4px}
+.ev p{color:var(--muted);max-width:60ch;font-size:1rem}
+.ev .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+@media (max-width:520px){
+  .tl::before{left:6px}
+  .ev{grid-template-columns:26px minmax(0,1fr);row-gap:2px}
+  .ev .yr{grid-column:2;text-align:left;grid-row:1}
+  .ev .dot{grid-column:1;grid-row:1;margin:3px 0 0 0}
+  .ev .body{grid-column:2;grid-row:2}
+}
+
+/* explorer */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:0;scrollbar-width:thin}
+.tab{flex:0 0 auto;font-family:var(--display);font-weight:700;font-size:.95rem;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-bottom:0;border-top:6px solid var(--c);border-radius:6px 6px 0 0;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg);border-top-color:var(--c)}
+.panel{background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--c);padding:28px;display:grid;gap:28px;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+@media (max-width:760px){.panel{grid-template-columns:minmax(0,1fr);padding:20px}}
+.panel .dates{font-family:var(--mono);font-size:.85rem;color:var(--muted);margin:6px 0 14px}
+.panel p+p{margin-top:12px}
+.panel ul{margin:10px 0 0;padding-left:1.1em;display:grid;gap:8px}
+.panel li{padding-left:2px}
+.panel li::marker{color:var(--c)}
+.legacy{border-left:3px solid var(--c);padding-left:14px;margin-top:20px;font-style:italic;color:var(--muted)}
+.facts{display:grid;gap:14px;align-content:start}
+.fact{border-top:1px solid var(--line);padding-top:12px}
+.fact b{font-family:var(--display);font-size:1.6rem;display:block;line-height:1.1}
+.fact span{font-size:.95rem;color:var(--muted)}
+
+/* quiz */
+.quiz{background:var(--surface);border:1px solid var(--line);padding:28px;max-width:720px}
+@media (max-width:520px){.quiz{padding:18px}}
+.progress{display:flex;gap:4px;margin-bottom:22px}
+.progress i{flex:1;height:6px;background:var(--line);border-radius:2px}
+.progress i.done{background:var(--accent)}
+.q{font-family:var(--display);font-size:1.4rem;font-weight:700;line-height:1.2;margin-bottom:18px;text-wrap:balance}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;font:inherit;font-size:1rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--good);box-shadow:inset 4px 0 0 var(--good)}
+.opt.wrong{border-color:var(--bad);box-shadow:inset 4px 0 0 var(--bad)}
+.explain{margin-top:16px;color:var(--muted);font-size:1rem}
+.btn{margin-top:18px;font-family:var(--display);font-weight:700;font-size:1rem;background:var(--accent);color:var(--accent-fg);border:0;border-radius:6px;padding:11px 22px;cursor:pointer}
+.score{font-family:var(--display);font-size:3rem;font-weight:800;line-height:1}
+
+footer{border-top:1px solid var(--line);padding-block:32px 48px;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:no-preference){.panel,.quiz{transition:border-color .2s}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="topbar">
+    <span class="label">An overview of human history</span>
+    <button class="theme-btn" id="themeBtn" type="button">Theme: system</button>
+  </div>
+  <h1>Long Human Story</h1>
+  <p class="lede">Our species has been around for roughly 300,000 years. Most of what we call history fits into the last sliver. Browse the eras, scan the timeline, then test what stuck.</p>
+
+  <div class="scale" aria-label="Written history compared with the age of our species">
+    <div class="scale-bar"><div class="scale-fill"></div><div class="scale-written"></div></div>
+    <div class="scale-ends label"><span>~300,000 years ago: earliest Homo sapiens fossils</span><span>Today</span></div>
+    <p class="scale-note">The bright sliver at the right is written history, about 5,300 years. That is under 2% of the span.</p>
+  </div>
+
+  <nav class="strip" id="strip" aria-label="Jump to an era"></nav>
+</header>
+
+<section id="timeline">
+  <div class="sec-head">
+    <span class="label">Timeline</span>
+    <h2>Turning points, in order</h2>
+    <p>Dates for the earliest periods are approximate and still revised as new evidence appears. Filter by era to focus.</p>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Filter events by era"></div>
+  <ol class="tl" id="tl"></ol>
+</section>
+
+<section id="eras">
+  <div class="sec-head">
+    <span class="label">Era explorer</span>
+    <h2>Seven ways to cut the past</h2>
+    <p>Historians draw era boundaries differently by region. These seven give a global outline.</p>
+  </div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Eras"></div>
+  <div class="panel" id="panel" role="tabpanel" tabindex="0"></div>
+</section>
+
+<section id="quiz">
+  <div class="sec-head">
+    <span class="label">Quiz</span>
+    <h2>Check what you remember</h2>
+    <p>Seven questions drawn from the timeline above.</p>
+  </div>
+  <div class="quiz" id="quizBox"></div>
+</section>
+
+<footer>
+  Dates are conventional estimates (BCE = before the common era, CE = common era). Ancient dates are approximate and vary by source.
+</footer>
+</div>
+
+<script>
+var ERAS=[
+{n:"Origins",short:"Origins",range:"~300,000 – 3500 BCE",c:"var(--e1)",
+ sum:"Homo sapiens emerges in Africa and spreads across the planet. People hunt, gather, learn to control fire and make tools, then paint caves and bury their dead with ritual. Around 11,500 years ago, farming begins in several places, and settled life follows.",
+ pts:["Stone tools, fire and language let small bands survive ice ages.","Humans reach Australia, the Americas and remote islands by sea and land.","Farming and animal herding appear independently in the Fertile Crescent, China, Mesoamerica and elsewhere."],
+ leg:"Almost everything later, from cities to money, rests on the food surplus that farming created.",
+ facts:[["~315,000 yrs","age of the oldest known Homo sapiens fossils (Morocco)"],["~9500 BCE","farming begins in the Fertile Crescent"],["~99%","share of human existence spent before agriculture"]]},
+{n:"First Cities and Bronze Age",short:"First Cities",range:"3500 – 1200 BCE",c:"var(--e2)",
+ sum:"Dense cities rise along rivers in Mesopotamia, Egypt, the Indus Valley and northern China. Rulers, priests and scribes organise irrigation, taxes and armies. Writing is invented to keep records, and bronze changes tools and war.",
+ pts:["Cuneiform in Sumer and hieroglyphs in Egypt record trade, law and religion.","Monumental building, from ziggurats to pyramids, shows states able to command huge labour.","Long-distance trade moves tin, copper, grain and luxury goods across regions."],
+ leg:"Law codes, bureaucracy, mathematics and the calendar all trace back to these first states.",
+ facts:[["~3400 BCE","earliest writing at Uruk, in Mesopotamia"],["~2560 BCE","Great Pyramid of Giza completed"],["~1754 BCE","Code of Hammurabi issued in Babylon"]]},
+{n:"Classical Empires",short:"Classical",range:"800 BCE – 500 CE",c:"var(--e3)",
+ sum:"Large empires link continents: Persia, Maurya India, Han China, Rome. Greek city-states experiment with democracy and philosophy. Great religious and ethical traditions take shape, including Buddhism, Confucianism, Christianity and the Hebrew prophets' legacy.",
+ pts:["Athenian democracy, Roman law and Chinese bureaucracy become models for later states.","The Silk Roads connect China, India, Persia and the Mediterranean.","Philosophy and early science flourish in Greece, India and China."],
+ leg:"Many modern institutions, from senates to civil service exams, descend from this period.",
+ facts:[["221 BCE","Qin unifies China"],["27 BCE","Augustus becomes Rome's first emperor"],["476 CE","the Western Roman Empire ends"]]},
+{n:"Medieval World",short:"Medieval",range:"500 – 1450",c:"var(--e4)",
+ sum:"Power spreads across many centres. Islamic caliphates build a vast world of trade and learning. Tang and Song China lead in technology. West African states such as Mali grow rich on gold. In Europe, feudal kingdoms and the Church shape daily life. The Mongols create the largest land empire ever seen.",
+ pts:["Scholars in Baghdad, Cairo and Córdoba preserve and extend Greek, Indian and Persian knowledge.","Paper, gunpowder and the compass spread from China westward.","The Black Death kills a large share of Eurasia's population in the 1300s."],
+ leg:"Universities, banking techniques and the trade networks that later fed global exchange all took shape here.",
+ facts:[["622 CE","the Hijra; start of the Islamic calendar"],["1206","Genghis Khan proclaimed ruler of the Mongols"],["1347","the Black Death reaches Europe"]]},
+{n:"Early Modern",short:"Early Modern",range:"1450 – 1789",c:"var(--e5)",
+ sum:"Printing spreads ideas fast. European ships link every ocean, beginning the Columbian exchange and the Atlantic slave trade, which uprooted millions of Africans. Gunpowder empires rise in the Ottoman, Safavid and Mughal worlds. Science and the Enlightenment challenge old authorities.",
+ pts:["The printing press lowers the cost of books and fuels the Reformation.","Contact between the Americas and Eurasia transforms diets, diseases and populations.","The Scientific Revolution reshapes how people study nature."],
+ leg:"The first truly global economy, and its deep injustices, date from these centuries.",
+ facts:[["~1450","Gutenberg's press in Mainz"],["1492","Columbus reaches the Caribbean"],["1543","Copernicus publishes his sun-centred model"]]},
+{n:"Age of Revolutions",short:"Revolutions",range:"1760 – 1914",c:"var(--e6)",
+ sum:"Steam power and factories begin in Britain and transform work. Political revolutions in America, France and Haiti spread ideas of rights and citizenship. Nations industrialise at different speeds, and European empires expand across Africa and Asia, often through force.",
+ pts:["Coal, steam and railways bring mass production and rapid urbanisation.","Slave trading is outlawed across much of the world, and abolition movements grow.","Nationalism and new ideologies reshape states and borders."],
+ leg:"Modern cities, wage labour and political rights as we know them come from this period.",
+ facts:[["1776","US Declaration of Independence"],["1789","the French Revolution begins"],["1804","Haiti declares independence"]]},
+{n:"The Modern World",short:"Modern",range:"1914 – today",c:"var(--e7)",
+ sum:"Two world wars, the Holocaust and nuclear weapons mark the first half of the century. Empires give way to dozens of new nations. After 1945 the Cold War divides the world, then ends. Computers, air travel and the internet connect billions of people, and climate change becomes a central challenge.",
+ pts:["Decolonisation creates new states across Asia and Africa between the 1940s and 1970s.","Medicine and agriculture help world population grow from under 2 billion to over 8 billion.","Digital networks change how people learn, work and organise."],
+ leg:"Today's institutions, from the United Nations to the web, were built within living memory.",
+ facts:[["1945","end of the Second World War"],["1969","Apollo 11 lands humans on the Moon"],["1994","South Africa's first democratic elections"]]}
+];
+
+var EVENTS=[
+[-315000,"Earliest known Homo sapiens","Fossils at Jebel Irhoud in Morocco push the origin of our species back to around 315,000 years ago.",0],
+[-45000,"Cave art","Painted figures in Europe and Indonesia show symbolic thought. Some are dated to more than 45,000 years ago.",0],
+[-9500,"Farming begins","People in the Fertile Crescent start growing wheat and barley and herding animals, and villages become permanent.",0],
+[-3400,"Writing appears","Cuneiform develops in Mesopotamian cities such as Uruk to record grain, labour and trade.",1],
+[-2560,"Great Pyramid completed","Built for Pharaoh Khufu at Giza, it is the largest of Egypt's pyramids.",1],
+[-1754,"Code of Hammurabi","Babylon's king publishes one of the earliest and most complete written law codes.",1],
+[-508,"Athenian democracy","Reforms by Cleisthenes give ordinary male citizens a direct role in governing Athens.",2],
+[-221,"China unified","Qin Shi Huang ends the Warring States period and founds the first imperial dynasty.",2],
+[-27,"Rome becomes an empire","Augustus takes power and begins two centuries of relative stability.",2],
+[476,"Western Rome falls","The last emperor in the West is deposed. The Eastern Empire continues for nearly a thousand years.",2],
+[622,"The Hijra","Muhammad and his followers move to Medina, the year Islamic calendars count from.",3],
+[800,"Charlemagne crowned","The Frankish king is crowned emperor in Rome, a landmark for medieval Europe.",3],
+[1206,"Mongol Empire founded","Temüjin is proclaimed Genghis Khan, and the Mongols go on to conquer much of Eurasia.",3],
+[1324,"Mansa Musa's pilgrimage","The ruler of Mali travels to Mecca with so much gold that it disrupts Cairo's economy.",3],
+[1347,"The Black Death","Plague spreads from the Black Sea to Europe, killing an estimated third or more of the population.",3],
+[1453,"Fall of Constantinople","The Ottomans capture the Byzantine capital, ending the Eastern Roman Empire.",4],
+[1450,"Printing press","Johannes Gutenberg's movable type makes books cheaper and spreads new ideas quickly.",4],
+[1492,"Columbus crosses the Atlantic","The voyage begins sustained contact between the Americas and Europe, with devastating effects on native peoples.",4],
+[1543,"Heliocentric model published","Copernicus argues that the Earth orbits the Sun, a key moment in the Scientific Revolution.",4],
+[1769,"Watt's steam engine","James Watt's improved engine becomes the power source of the Industrial Revolution.",5],
+[1776,"American independence","Thirteen colonies declare independence from Britain, citing universal rights.",5],
+[1789,"French Revolution","The overthrow of the monarchy spreads ideas of citizenship across Europe.",5],
+[1804,"Haiti independent","The only successful large-scale slave revolt creates the first Black republic.",5],
+[1914,"First World War begins","Four years of industrial warfare end four empires and redraw the map of Europe.",6],
+[1945,"Second World War ends","Nuclear weapons, the Holocaust and tens of millions of deaths lead to the United Nations.",6],
+[1947,"India and Pakistan independent","Decolonisation gathers pace across Asia and Africa over the next three decades.",6],
+[1969,"Humans on the Moon","Apollo 11 astronauts walk on the lunar surface.",6],
+[1989,"Berlin Wall falls","The event comes to symbolise the end of the Cold War division of Europe.",6],
+[1991,"World Wide Web goes public","Tim Berners-Lee's system opens to outside users, and the internet becomes everyday infrastructure.",6],
+[1994,"South Africa votes","The first democratic elections end apartheid and bring Nelson Mandela to the presidency.",6]
+];
+EVENTS.sort(function(a,b){return a[0]-b[0]});
+
+var QUIZ=[
+{q:"Which writing system is usually counted as the earliest, appearing around 3400 BCE in Mesopotamia?",o:["Cuneiform","The Latin alphabet","Norse runes","Oracle bone script"],a:0,e:"Cuneiform was pressed into clay at cities like Uruk, first to track goods and labour."},
+{q:"What began in the Fertile Crescent about 11,500 years ago and made permanent settlements possible?",o:["Metalworking","Farming","Sailing","Printing"],a:1,e:"Growing crops and herding animals created food surpluses, which supported villages and later cities."},
+{q:"In which year did the Western Roman Empire end?",o:["27 BCE","476 CE","1066 CE","1453 CE"],a:1,e:"The last Western emperor, Romulus Augustulus, was deposed in 476. The Eastern Empire lasted until 1453."},
+{q:"In which decade did the Black Death reach Europe?",o:["1140s","1240s","1340s","1440s"],a:2,e:"It arrived in 1347 by ship from the Black Sea and killed a third or more of Europe's people."},
+{q:"Mansa Musa, known for a famous pilgrimage to Mecca in 1324, ruled which empire?",o:["Mali","Songhai","Ethiopia","Ottoman Empire"],a:0,e:"The Mali Empire controlled rich gold-producing lands in West Africa."},
+{q:"Where did the Industrial Revolution begin in the 1700s?",o:["France","Germany","Great Britain","United States"],a:2,e:"Coal, capital and inventions like Watt's engine came together in Britain first."},
+{q:"In which year did South Africa hold its first fully democratic elections?",o:["1980","1990","1994","2000"],a:2,e:"The April 1994 vote made Nelson Mandela president and ended apartheid rule."}
+];
+
+function fy(y){
+  if(y<0){var a=-y;return (a>=10000?a.toLocaleString("en-US"):a)+" BCE";}
+  return y+" CE";
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+/* strip */
+var strip=document.getElementById("strip");
+strip.innerHTML=ERAS.map(function(e,i){return '<a href="#eras" data-i="'+i+'" style="--c:'+e.c+'">'+esc(e.short)+'</a>'}).join("");
+strip.addEventListener("click",function(ev){var a=ev.target.closest("a");if(a)selectEra(+a.dataset.i,false)});
+
+/* timeline */
+var filter=-1;
+var chips=document.getElementById("chips"),tl=document.getElementById("tl");
+function drawChips(){
+  var h='<button type="button" class="chip" data-f="-1" aria-pressed="'+(filter===-1)+'">All eras</button>';
+  ERAS.forEach(function(e,i){h+='<button type="button" class="chip" data-f="'+i+'" style="--c:'+e.c+'" aria-pressed="'+(filter===i)+'"><i></i>'+esc(e.short)+'</button>'});
+  chips.innerHTML=h;
+}
+function drawTl(){
+  tl.innerHTML=EVENTS.filter(function(e){return filter===-1||e[3]===filter}).map(function(e){
+    return '<li class="ev" style="--c:'+ERAS[e[3]].c+'"><span class="yr">'+fy(e[0])+'</span><span class="dot"></span><div class="body"><div class="tag">'+esc(ERAS[e[3]].short)+'</div><h3>'+esc(e[1])+'</h3><p>'+esc(e[2])+'</p></div></li>';
+  }).join("");
+}
+chips.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;
+  filter=+b.dataset.f;drawChips();drawTl();
+});
+drawChips();drawTl();
+
+/* explorer */
+var tabs=document.getElementById("tabs"),panel=document.getElementById("panel"),cur=0;
+function drawTabs(){
+  tabs.innerHTML=ERAS.map(function(e,i){
+    return '<button type="button" role="tab" id="tab'+i+'" class="tab" style="--c:'+e.c+'" aria-selected="'+(i===cur)+'" tabindex="'+(i===cur?0:-1)+'">'+esc(e.short)+'</button>';
+  }).join("");
+}
+function drawPanel(){
+  var e=ERAS[cur];
+  panel.style.setProperty("--c",e.c);
+  panel.setAttribute("aria-labelledby","tab"+cur);
+  panel.innerHTML='<div><h3 style="font-size:1.7rem">'+esc(e.n)+'</h3><div class="dates">'+esc(e.range)+'</div><p>'+esc(e.sum)+'</p><ul>'+e.pts.map(function(p){return '<li>'+esc(p)+'</li>'}).join("")+'</ul><p class="legacy">'+esc(e.leg)+'</p></div><div class="facts">'+e.facts.map(function(f){return '<div class="fact"><b>'+esc(f[0])+'</b><span>'+esc(f[1])+'</span></div>'}).join("")+'</div>';
+}
+function selectEra(i,focus){
+  cur=i;drawTabs();drawPanel();
+  if(focus)document.getElementById("tab"+i).focus();
+  var t=document.getElementById("tab"+i);if(t&&t.scrollIntoView)t.scrollIntoView({block:"nearest",inline:"center"});
+}
+tabs.addEventListener("click",function(ev){var b=ev.target.closest(".tab");if(b)selectEra(+b.id.slice(3),false)});
+tabs.addEventListener("keydown",function(ev){
+  if(ev.key==="ArrowRight")selectEra((cur+1)%ERAS.length,true);
+  else if(ev.key==="ArrowLeft")selectEra((cur+ERAS.length-1)%ERAS.length,true);
+  else return;
+  ev.preventDefault();
+});
+selectEra(0,false);
+
+/* quiz */
+var qb=document.getElementById("quizBox"),qi=0,score=0,answered=false;
+function drawQuiz(){
+  var bar='<div class="progress" aria-hidden="true">'+QUIZ.map(function(_,i){return '<i class="'+(i<qi||(i===qi&&answered)?"done":"")+'"></i>'}).join("")+'</div>';
+  if(qi>=QUIZ.length){
+    var msg=score>=6?"You know your history.":score>=4?"A solid grasp. Try the timeline again for the rest.":"A good start. Browse the eras and try again.";
+    qb.innerHTML=bar+'<div class="label">Final score</div><div class="score">'+score+' / '+QUIZ.length+'</div><p class="explain">'+msg+'</p><button class="btn" type="button" id="again">Take it again</button>';
+    document.getElementById("again").onclick=function(){qi=0;score=0;answered=false;drawQuiz()};
+    return;
+  }
+  var q=QUIZ[qi];
+  qb.innerHTML=bar+'<div class="label">Question '+(qi+1)+' of '+QUIZ.length+'</div><p class="q" id="qtext" style="margin-top:6px">'+esc(q.q)+'</p><div class="opts" role="group" aria-labelledby="qtext">'+q.o.map(function(o,i){return '<button type="button" class="opt" data-i="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div id="fb" aria-live="polite"></div>';
+}
+qb.addEventListener("click",function(ev){
+  var b=ev.target.closest(".opt");
+  if(b&&!answered){
+    answered=true;
+    var q=QUIZ[qi],pick=+b.dataset.i;
+    if(pick===q.a)score++;
+    qb.querySelectorAll(".opt").forEach(function(el,i){
+      el.disabled=true;
+      if(i===q.a)el.classList.add("right");
+      else if(i===pick)el.classList.add("wrong");
+    });
+    var last=qi===QUIZ.length-1;
+    document.getElementById("fb").innerHTML='<p class="explain"><strong>'+(pick===q.a?"Correct. ":"Not quite. ")+'</strong>'+esc(q.e)+'</p><button class="btn" type="button" id="next">'+(last?"See score":"Next question")+'</button>';
+    qb.querySelectorAll(".progress i")[qi].className="done";
+    document.getElementById("next").focus();
+    return;
+  }
+  if(ev.target.id==="next"){qi++;answered=false;drawQuiz()}
+});
+drawQuiz();
+
+/* theme toggle: system -> light -> dark */
+var themeBtn=document.getElementById("themeBtn"),mode="system";
+try{mode=localStorage.getItem("lhs-theme")||"system"}catch(e){}
+function applyTheme(){
+  var r=document.documentElement;
+  if(mode==="system")r.removeAttribute("data-theme");else r.setAttribute("data-theme",mode);
+  themeBtn.textContent="Theme: "+mode;
+}
+themeBtn.addEventListener("click",function(){
+  mode=mode==="system"?"light":mode==="light"?"dark":"system";
+  try{localStorage.setItem("lhs-theme",mode)}catch(e){}
+  applyTheme();
+});
+applyTheme();
+</script>
